@@ -89,73 +89,125 @@ export default function RankingHistoryPage() {
 
       {/* Session Detail Modal */}
       {selectedSession && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-neutral-900/60 backdrop-blur-sm" onClick={() => setSelectedSession(null)} />
-          <div className="relative bg-base-100 w-full max-w-5xl max-h-[90vh] rounded-3xl overflow-hidden shadow-2xl border border-base-300 flex flex-col">
-            <div className="p-4 md:p-6 border-b border-base-300 flex items-center justify-between bg-base-200">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-base-100 rounded-xl flex items-center justify-center border border-base-300 shadow-sm text-primary">
-                  <History className="w-4 h-4 md:w-6 md:h-6" />
+        <div className="fixed inset-0 z-60 flex items-end sm:items-center justify-center sm:p-4">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-neutral-900/70 backdrop-blur-md transition-opacity" 
+            onClick={() => setSelectedSession(null)} 
+          />
+          
+          <div className="relative bg-base-100 w-full max-w-5xl 
+            /* Responsive Height: Mengisi hampir seluruh layar di mobile */
+            h-[95dvh] sm:h-auto sm:max-h-[90vh] 
+            rounded-t-[2.5rem] sm:rounded-3xl 
+            overflow-hidden shadow-2xl border-t sm:border border-base-300 
+            flex flex-col transform transition-all"
+          >
+            {/* Mobile Handle Bar */}
+            <div className="w-12 h-1.5 bg-base-300/60 rounded-full mx-auto my-3 sm:hidden shrink-0" />
+
+            {/* Sticky Header */}
+            <div className="sticky top-0 z-20 px-6 py-4 md:p-6 border-b border-base-300 flex items-center justify-between bg-base-100/90 backdrop-blur-sm">
+              <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-primary/10 rounded-xl shrink-0 flex items-center justify-center border border-primary/20 text-primary">
+                  <History className="w-5 h-5 md:w-6 md:h-6" />
                 </div>
-                <div>
-                  <h2 className="text-lg md:text-2xl font-bold text-base-content">{selectedSession.job_title}</h2>
-                  <p className="text-xs text-base-content/50 font-medium">{formatFullDate(selectedSession.created_at)}</p>
+                <div className="overflow-hidden">
+                  <h2 className="text-base md:text-2xl font-bold text-base-content truncate leading-tight">
+                    {selectedSession.job_title}
+                  </h2>
+                  <p className="text-[10px] md:text-xs text-base-content/50 font-bold uppercase tracking-wider mt-0.5">
+                    {formatFullDate(selectedSession.created_at)}
+                  </p>
                 </div>
               </div>
-              <button onClick={() => setSelectedSession(null)} className="btn btn-ghost btn-circle btn-sm">
+              <button 
+                onClick={() => setSelectedSession(null)} 
+                className="btn btn-ghost btn-circle btn-sm bg-base-200 sm:bg-transparent shrink-0"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
             
-            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-8">
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto p-5 md:p-8 flex flex-col gap-6 md:gap-8 custom-scrollbar">
+              
+              {/* Job Description Section */}
               <section>
-                <h3 className="text-sm font-bold uppercase tracking-widest text-primary mb-3">Job Description</h3>
-                <div className="bg-base-200 p-4 rounded-xl border border-base-300 text-sm italic text-base-content/70">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="h-4 w-1 bg-primary rounded-full" />
+                  <h3 className="text-xs font-black uppercase tracking-widest text-base-content/70">Job Description</h3>
+                </div>
+                <div className="bg-base-200/50 p-4 rounded-2xl border border-base-300 text-sm italic leading-relaxed text-base-content/80 relative overflow-hidden">
+                  {/* Decorative quote icon */}
+                  <div className="absolute -right-2 -bottom-2 opacity-5 scale-150 pointer-events-none">
+                      <History className="w-20 h-20" />
+                  </div>
                   {selectedSession.job_description}
                 </div>
               </section>
 
-              <section>
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-primary">Ranked Candidates</h3>
-                  <span className="badge badge-neutral">{selectedSession.results.length} results</span>
+              {/* Candidates Section */}
+              <section className="pb-10">
+                <div className="flex items-center justify-between mb-5">
+                  <div className="flex items-center gap-2">
+                    <div className="h-4 w-1 bg-primary rounded-full" />
+                    <h3 className="text-xs font-black uppercase tracking-widest text-base-content/70">Ranked Candidates</h3>
+                  </div>
+                  <span className="badge badge-neutral badge-sm font-bold">{selectedSession.results.length} Profiles</span>
                 </div>
                 
-                <div className="grid gap-3">
+                <div className="grid gap-4 sm:gap-3">
                   {selectedSession.results.map((candidate) => (
                     <div 
                       key={candidate.candidate}
                       onClick={() => setSelectedCandidate(candidate)}
-                      className="bg-base-100 border border-base-300 rounded-2xl p-4 hover:border-primary transition cursor-pointer flex items-center gap-4 group"
+                      className="bg-base-100 border border-base-300 rounded-2xl p-4 hover:border-primary hover:shadow-lg transition-all cursor-pointer flex items-center gap-4 group active:scale-[0.98]"
                     >
-                      <div className="w-12 h-12 shrink-0">
+                      {/* Score Chart */}
+                      <div className="w-12 h-12 md:w-14 md:h-14 shrink-0">
                         <CircularProgressbar
                           value={candidate.score}
                           text={`${candidate.score}`}
                           styles={buildStyles({
-                            pathColor: candidate.score >= 80 ? 'oklch(var(--su))' : candidate.score >= 60 ? 'oklch(var(--wa))' : 'oklch(var(--er))',
+                            pathColor: candidate.score >= 80 ? '#22c55e' : candidate.score >= 60 ? '#eab308' : '#ef4444',
                             textColor: 'oklch(var(--bc))',
                             textSize: '32px',
                             trailColor: 'oklch(var(--b3))',
+                            strokeLinecap: 'round'
                           })}
                         />
                       </div>
+
+                      {/* Info Container */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-0.5">
-                          <span className="text-xs font-bold text-base-content/40">#{candidate.rank}</span>
-                          <h4 className="font-bold text-base-content truncate group-hover:text-primary transition-colors">{candidate.candidate}</h4>
+                          <span className="text-[10px] font-bold text-primary px-1.5 py-0.5 bg-primary/10 rounded">#{candidate.rank}</span>
+                          <h4 className="font-bold text-sm md:text-base text-base-content truncate group-hover:text-primary transition-colors">
+                            {candidate.candidate}
+                          </h4>
                         </div>
-                        <div className="flex items-center gap-3 text-[10px] text-base-content/50 uppercase font-bold tracking-wider">
-                          <span className={
+                        
+                        {/* Tags Wrap for Mobile */}
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                          <span className={`text-[10px] font-black uppercase tracking-tighter ${
                             candidate.analysis.suitability_tag === 'Highly Recommended' ? 'text-success' :
                             candidate.analysis.suitability_tag === 'Medium Match' ? 'text-warning' :
                             'text-error'
-                          }>{candidate.analysis.suitability_tag}</span>
-                          <span>•</span>
-                          <span>{candidate.metadata.years_of_experience} yrs exp</span>
+                          }`}>
+                            {candidate.analysis.suitability_tag}
+                          </span>
+                          <span className="text-[10px] text-base-content/30 hidden sm:inline">•</span>
+                          <div className="flex items-center gap-1 text-[10px] text-base-content/50 font-bold uppercase tracking-wider">
+                            <span>{candidate.metadata.years_of_experience} YRS EXP</span>
+                          </div>
                         </div>
                       </div>
-                      <ChevronRight className="w-5 h-5 text-base-content/20 group-hover:text-primary transition-all group-hover:translate-x-1" />
+
+                      {/* Arrow - Hidden on very small screens to save space */}
+                      <div className="bg-base-200 p-2 rounded-full group-hover:bg-primary/10 transition-colors">
+                        <ChevronRight className="w-4 h-4 text-base-content/30 group-hover:text-primary transition-all group-hover:translate-x-0.5" />
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -167,68 +219,88 @@ export default function RankingHistoryPage() {
 
       {/* Detail Candidate Modal (Reuse from ranking page logic) */}
       {selectedCandidate && (
-        <div className="fixed inset-0 z-70 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-neutral-900/60 backdrop-blur-sm" onClick={() => setSelectedCandidate(null)} />
-          <div className="relative bg-base-100 w-full max-w-4xl max-h-[90vh] rounded-3xl overflow-hidden shadow-2xl border border-base-300 flex flex-col">
-            <div className="p-4 md:p-6 border-b border-base-300 flex items-center justify-between bg-base-200">
-              <div className="flex items-center gap-6">
-                <div className="w-14 md:w-12 h-10 md:h-12 bg-base-100 rounded-xl flex items-center justify-center border border-base-300 shadow-sm text-primary">
-                  <User className="w-4 h-4 md:w-6 md:h-6" />
+        <div className="fixed inset-0 z-70 flex items-end sm:items-center justify-center">
+          {/* Backdrop dengan overscroll-none untuk mencegah scroll bocor ke background */}
+          <div 
+            className="absolute inset-0 bg-neutral-900/80 backdrop-blur-sm" 
+            onClick={() => setSelectedCandidate(null)} 
+          />
+          
+          <div className="relative bg-base-100 w-full max-w-4xl 
+            /* Solusi Tinggi Mobile: Gunakan dvh agar tidak terpotong address bar */
+            h-[92dvh] sm:h-auto sm:max-h-[90vh] 
+            rounded-t-4xl sm:rounded-3xl 
+            overflow-hidden shadow-2xl border border-base-300 flex flex-col
+            transition-all duration-300 ease-out transform translate-y-0"
+          >
+            {/* Handle Bar untuk Mobile (Visual cue bahwa ini bisa di-scroll/tutup) */}
+            <div className="w-12 h-1.5 bg-base-300 rounded-full mx-auto my-3 sm:hidden" />
+
+            {/* Header: Dibuat Sticky agar navigasi tutup selalu terlihat */}
+            <div className="sticky top-0 z-10 px-6 py-4 sm:p-8 border-b border-base-300 flex items-center justify-between bg-base-100/80 backdrop-blur-md">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-xl flex items-center justify-center border border-primary/20 text-primary">
+                  <User className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
                 <div>
-                  <h2 className="text-lg md:text-2xl font-bold text-base-content">{selectedCandidate.candidate}</h2>
-                  <p className="text-sm md:text-lg text-base-content/50 font-medium">Candidate Profile Analysis</p>
+                  <h2 className="text-lg sm:text-2xl font-bold text-base-content leading-tight truncate max-w-45 sm:max-w-none">
+                    {selectedCandidate.candidate}
+                  </h2>
+                  <p className="text-[10px] sm:text-sm text-base-content/60 font-medium uppercase tracking-wider">Candidate Analysis</p>
                 </div>
               </div>
-              <button onClick={() => setSelectedCandidate(null)} className="btn btn-ghost btn-circle">
+              <button 
+                onClick={() => setSelectedCandidate(null)}
+                className="btn btn-ghost btn-circle btn-sm bg-base-200 sm:bg-transparent"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
             
-            <div className="flex-1 overflow-y-auto p-8">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="md:col-span-2 flex flex-col gap-6">
+            {/* Content Area */}
+            <div className="flex-1 overflow-y-auto p-6 sm:p-8 pb-8 custom-scrollbar">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                
+                {/* Main Info */}
+                <div className="md:col-span-2 flex flex-col gap-6 order-2 md:order-1">
                   <section>
-                    <h3 className="text-sm font-bold uppercase tracking-widest text-primary mb-3">AI Comparison Analysis</h3>
-                    <p className="text-base-content/80 leading-relaxed bg-base-200 p-4 rounded-xl border border-base-300">
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-primary mb-3">AI Matching Reason</h3>
+                    <p className="text-sm sm:text-base text-base-content/90 leading-relaxed bg-base-200/50 p-4 rounded-2xl border border-base-300">
                       {selectedCandidate.analysis.reason}
                     </p>
                   </section>
 
-                  <section className="bg-primary/5 p-6 rounded-2xl border border-primary/20">
-                    <div className="flex items-center gap-2 mb-4 text-primary font-bold">
-                      <CheckSquare className="w-5 h-5" />
-                      Top Skills
+                  <section className="bg-primary/5 p-5 rounded-2xl border border-primary/10">
+                    <div className="flex items-center gap-2 mb-4 text-primary font-bold text-sm">
+                      <CheckSquare className="w-4 h-4" />
+                      Key Competencies
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {selectedCandidate.metadata.top_skills.map(skill => (
-                        <span key={skill} className="badge badge-primary badge-outline font-semibold">
+                        <span key={skill} className="badge badge-white border-base-300 shadow-sm py-3 px-4 font-medium text-xs">
                           {skill}
                         </span>
                       ))}
                     </div>
                   </section>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-base-200 rounded-xl p-4 border border-base-300">
-                      <p className="text-xs font-bold uppercase tracking-wider text-base-content/50 mb-1">Experience</p>
-                      <p className="text-2xl font-bold text-base-content">{selectedCandidate.metadata.years_of_experience} <span className="text-base font-normal">years</span></p>
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                    <div className="bg-base-200/50 rounded-2xl p-4 border border-base-300">
+                      <p className="text-[10px] font-bold uppercase opacity-50 mb-1">Experience</p>
+                      <p className="text-lg sm:text-xl font-bold">{selectedCandidate.metadata.years_of_experience} Yrs</p>
                     </div>
-                    <div className="bg-base-200 rounded-xl p-4 border border-base-300">
-                      <p className="text-xs font-bold uppercase tracking-wider text-base-content/50 mb-1">Location</p>
-                      <p className="text-sm font-semibold text-base-content">{selectedCandidate.metadata.location}</p>
+                    <div className="bg-base-200/50 rounded-2xl p-4 border border-base-300">
+                      <p className="text-[10px] font-bold uppercase opacity-50 mb-1">Location</p>
+                      <p className="text-sm sm:text-base font-bold truncate">{selectedCandidate.metadata.location}</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-6">
-                  <div className="bg-linear-to-br from-primary via-secondary to-accent text-neutral-content rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden">
-                    {/* subtle glow */}
-                    <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
-                    <p className="text-neutral-content/80 text-xs font-semibold uppercase mb-4 tracking-widest">
-                      Matching Score
-                    </p>
-                    <div className="w-32 h-32 mx-auto mb-4">
+                {/* Sidebar / Score: Di mobile muncul di atas (order-1) agar info utama langsung terlihat */}
+                <div className="flex flex-col gap-4 order-1 md:order-2">
+                  <div className="bg-linear-to-br from-primary to-primary-focus text-primary-content rounded-4xl p-6 text-center shadow-xl shadow-primary/20">
+                    <p className="text-[10px] font-bold uppercase mb-4 opacity-80 tracking-widest">Matching Score</p>
+                    <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-4">
                       <CircularProgressbar
                         value={selectedCandidate.score}
                         text={`${selectedCandidate.score}%`}
@@ -236,21 +308,13 @@ export default function RankingHistoryPage() {
                           pathColor: "white",
                           textColor: "white",
                           trailColor: "rgba(255,255,255,0.2)",
-                          textSize: "24px",
+                          textSize: "26px",
                         })}
                       />
                     </div>
-                    <p
-                      className={`text-xs font-semibold px-3 py-2 rounded-full text-white inline-block backdrop-blur-sm ${
-                        selectedCandidate.analysis.suitability_tag === "Highly Recommended"
-                          ? "bg-success/90"
-                          : selectedCandidate.analysis.suitability_tag === "Medium Match"
-                          ? "bg-warning/90"
-                          : "bg-error/90"
-                      }`}
-                    >
+                    <div className={`text-[10px] font-bold px-4 py-1.5 rounded-full inline-block bg-white/20 backdrop-blur-md border border-white/30`}>
                       {selectedCandidate.analysis.suitability_tag}
-                    </p>
+                    </div>
                   </div>
                 </div>
               </div>
