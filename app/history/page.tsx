@@ -1,7 +1,7 @@
 "use client";
 
-import { History, Calendar, User, CheckSquare, AlertCircle, Eye, ChevronRight, Briefcase } from "lucide-react";
-import { useEffect, useState } from "react";
+import { History, Calendar, User, CheckSquare, AlertCircle, Eye, ChevronRight, Briefcase, ChevronLeft } from "lucide-react";
+import { useEffect, useState, useMemo } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import type { RankingHistoryItem, RankedCandidate } from "@/types/api";
@@ -12,12 +12,29 @@ export default function RankingHistoryPage() {
   const { history, isLoading, error, setError, userId, fetchHistory } = useApps();
   const [selectedSession, setSelectedSession] = useState<RankingHistoryItem | null>(null);
   const [selectedCandidate, setSelectedCandidate] = useState<RankedCandidate | null>(null);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
 
   useEffect(() => {
     if (userId) {
       fetchHistory(userId);
     }
   }, []);
+
+  // Calculate paginated history
+  const paginatedHistory = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return history.slice(startIndex, startIndex + itemsPerPage);
+  }, [history, currentPage]);
+
+  const totalPages = Math.ceil(history.length / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className="flex flex-col gap-8 max-w-5xl mx-auto pb-12">
@@ -48,42 +65,77 @@ export default function RankingHistoryPage() {
         </div>
       ) : (
         <div className="grid gap-4">
-          {history.map((session) => (
-            <div 
-              key={session._id}
-              className="bg-base-100 border border-base-300 rounded-2xl overflow-hidden hover:shadow-md transition group"
-            >
-              <div className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-content transition-colors">
-                    <Briefcase className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h2 className="font-bold text-lg text-base-content">{session.job_title}</h2>
-                    <div className="flex items-center gap-4 mt-1 text-xs text-base-content/50 font-medium">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        {formatFullDate(session.created_at)}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <User className="w-3 h-3" />
-                        {session.results.length} Candidates
-                      </span>
+          <div className="grid gap-4">
+            {paginatedHistory.map((session) => (
+              <div 
+                key={session._id}
+                className="bg-base-100 border border-base-300 rounded-2xl overflow-hidden hover:shadow-md transition group"
+              >
+                <div className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-content transition-colors">
+                      <Briefcase className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h2 className="font-bold text-lg text-base-content">{session.job_title}</h2>
+                      <div className="flex items-center gap-4 mt-1 text-xs text-base-content/50 font-medium">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          {formatFullDate(session.created_at)}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <User className="w-3 h-3" />
+                          {session.results.length} Candidates
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button 
-                    onClick={() => setSelectedSession(session)}
-                    className="btn btn-primary btn-sm gap-2"
-                  >
-                    <Eye className="w-4 h-4" />
-                    View Results
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={() => setSelectedSession(session)}
+                      className="btn btn-primary btn-sm gap-2"
+                    >
+                      <Eye className="w-4 h-4" />
+                      View Results
+                    </button>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 mt-6">
+              <button 
+                className="btn btn-sm btn-outline btn-square"
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              
+              <div className="flex items-center gap-1">
+                {[...Array(totalPages)].map((_, i) => (
+                  <button 
+                    key={i + 1}
+                    className={`btn btn-sm btn-square ${currentPage === i + 1 ? 'btn-primary' : 'btn-ghost'}`}
+                    onClick={() => handlePageChange(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+
+              <button 
+                className="btn btn-sm btn-outline btn-square"
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
             </div>
-          ))}
+          )}
         </div>
       )}
 

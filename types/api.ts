@@ -12,6 +12,18 @@ export interface ListCVResponse {
   total: number;
 }
 
+export interface Candidate {
+  metadata?: {
+    summary: any,
+    top_skills: any,
+    years_of_experience: any,
+    location: any
+  },
+  upload_date?: any,
+  status?: any,
+  file_name: any
+}
+
 // ─────────────────────────────────────────────
 // POST /api/v1/upload-cv
 // ─────────────────────────────────────────────
