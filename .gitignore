@@ -10,6 +10,7 @@
 !.yarn/releases
 !.yarn/versions
 
+project-req.md
 # testing
 /coverage
 
