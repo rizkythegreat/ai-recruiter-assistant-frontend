@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "RecruitAI - AI-Powered Recruitment Assistant",
   description: "Efficiently rank and analyze candidates with AI.",
+  icons: {
+    icon: "/logo-cv-assistants.png"
+  }
 };
 
 export default function RootLayout({

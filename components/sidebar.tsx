@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Users, Upload, TrendingUp, Search, History, Menu, X } from "lucide-react";
 import { useState } from "react";
+import Image from "next/image";
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -47,8 +48,9 @@ export function Sidebar() {
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-base-300 bg-base-100 flex flex-col transition-transform duration-300 lg:sticky lg:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="p-6 border-b border-base-300 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-sm shadow-primary/20">
-              <TrendingUp className="text-primary-content w-5 h-5" />
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm shadow-primary/20">
+              <Image src={'/logo-cv-assistants.png'} alt="logo" width={20} height={20} />
+              {/* <TrendingUp className="text-primary-content w-5 h-5" /> */}
             </div>
             <span className="font-bold text-xl tracking-tight text-base-content">RecruitAI</span>
           </div>
