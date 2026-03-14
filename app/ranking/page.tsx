@@ -270,7 +270,7 @@ export default function RankingPage() {
             </div>
 
             {/* Floating Action Buttons untuk Mobile */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-linear-to-t from-base-100 via-base-100 to-transparent sm:relative sm:p-8 sm:bg-none flex flex-col sm:flex-row gap-3">
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-linear-to-t from-base-100 via-base-100 to-transparent sm:relative sm:p-8 sm:bg-none flex flex-col gap-3">
               <button className="btn btn-primary w-full h-12 rounded-xl text-base font-bold shadow-lg shadow-primary/30">
                 Contact Candidate
               </button>
