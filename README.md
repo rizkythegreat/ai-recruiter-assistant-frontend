@@ -2,6 +2,9 @@
 
 Modern Web Dashboard for **AI-Powered Candidate Ranking** and **CV Management**. This frontend connects to an Advanced RAG backend (FastAPI + LlamaIndex) to help recruiters find the best candidates using semantic search and AI reranking.
 
+![Preview Dashboard](/public/screenshots/preview-1.png)
+![Preview Detail](/public//screenshots/preview-2.png)
+
 ## ✨ Features
 
 - **📊 Recruiter Dashboard:** Overview of total CVs, search activity, and average candidate scores.
