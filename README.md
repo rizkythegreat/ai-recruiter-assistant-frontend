@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Recruiter Assistant - Frontend 🚀
 
-## Getting Started
+Modern Web Dashboard for **AI-Powered Candidate Ranking** and **CV Management**. This frontend connects to an Advanced RAG backend (FastAPI + LlamaIndex) to help recruiters find the best candidates using semantic search and AI reranking.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **📊 Recruiter Dashboard:** Overview of total CVs, search activity, and average candidate scores.
+- **📁 CV Management:** Upload multiple files (PDF/Docx), view indexed candidates, and delete records.
+- **🎯 AI Ranking:** Start ranking candidates against a custom Job Description using Advanced RAG (Hybrid Search + RRF + Cross-Encoder Reranking).
+- **🔄 Session-based Isolation:** Automatically generates a unique `user_id` per browser session to isolate candidate data.
+- **⚡ Real-time Feedback:** Upload progress tracking and interactive ranking analysis.
+- **📱 Responsive Design:** Built with Tailwind CSS and DaisyUI for a seamless experience on all devices.
+
+## 🛠️ Tech Stack
+
+- **Framework:** [Next.js 15+](https://nextjs.org) (App Router)
+- **Styling:** [Tailwind CSS 4](https://tailwindcss.com), [DaisyUI](https://daisyui.com)
+- **Icons:** [Lucide React](https://lucide.dev)
+- **Animations:** [Framer Motion](https://www.framer.com/motion/)
+- **Components:** Radix UI primitives
+- **API Client:** Axios
+- **State Management:** React Context API
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+- Node.js 20+ installed
+- A running instance of the [AI Recruiter Backend](project-req.md) (FastAPI)
+
+### 2. Environment Setup
+Create a `.env.local` file in the root directory:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Installation
+```bash
+npm install
+# or
+yarn install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Development
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📁 Project Structure
 
-## Learn More
+```text
+app/
+├── candidates/     # CV Listing and Management
+├── context/        # Global State (AppsContext)
+├── hooks/          # Custom Hooks (useApps)
+├── ranking/        # AI Ranking Page
+├── upload/         # File Upload Center
+├── page.tsx        # Dashboard Overview
+components/         # Reusable UI Components
+services/           # API Service Layer (Axios)
+types/              # TypeScript Interfaces
+utils/              # Helpers (Date formatting, etc.)
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🔒 Data Isolation
+This project implements a frontend-generated `user_id` stored in `localStorage`. Every browser session is treated as a unique user, ensuring that CVs uploaded by one recruiter are not visible to others unless they share the same backend database configuration.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+Built with ❤️ for Modern HR Teams.
