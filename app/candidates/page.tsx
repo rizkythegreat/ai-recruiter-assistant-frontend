@@ -1,28 +1,28 @@
 "use client";
 
 import { Eye, Trash2, Search, Filter, Loader2, AlertCircle } from "lucide-react";
-import { useState } from "react";
-import { listCVs, deleteCV } from "@/services/cv.service";
+import { useEffect, useState } from "react";
+import { deleteCV } from "@/services/cv.service";
 import { formatFullDate } from "@/utils/dateFormat";
 import { useApps } from "../hooks/useApps";
 
 export default function CandidatesPage() {
-  const { candidates, setCandidates, isLoading, setIsLoading, error, setError, userId } = useApps();
+  const { candidates, setCandidates, isLoading, error, setError, userId, fetchCandidates } = useApps();
+  const [count, setCount] = useState(0);
   const [deletingFile, setDeletingFile] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const fetchCandidates = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const data = await listCVs(userId);
-      setCandidates(data.files);
-    } catch (err: any) {
-      setError(err.message ?? "Failed to load candidates.");
-    } finally {
-      setIsLoading(false);
+  useEffect(() => {
+    if (userId) {
+      fetchCandidates(userId);
     }
+  }, [count])
+
+  const handleClickSearch = () => {
+    setCount(count + 1 );
   };
+
+  
 
   const deleteCandidate = async (file_name: string) => {
     setDeletingFile(file_name);
@@ -58,7 +58,7 @@ export default function CandidatesPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <button className="btn btn-outline btn-sm gap-2" onClick={fetchCandidates}>
+          <button className="btn btn-outline btn-sm gap-2" onClick={handleClickSearch}>
             <Filter className="w-4 h-4" />
             Refresh
           </button>

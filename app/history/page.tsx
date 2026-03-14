@@ -1,7 +1,7 @@
 "use client";
 
 import { History, Calendar, User, CheckSquare, AlertCircle, Eye, ChevronRight, Briefcase } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import type { RankingHistoryItem, RankedCandidate } from "@/types/api";
@@ -9,9 +9,15 @@ import { formatFullDate } from "@/utils/dateFormat";
 import { useApps } from "../hooks/useApps";
 
 export default function RankingHistoryPage() {
-  const { history, isLoading, error, setError } = useApps();
+  const { history, isLoading, error, setError, userId, fetchHistory } = useApps();
   const [selectedSession, setSelectedSession] = useState<RankingHistoryItem | null>(null);
   const [selectedCandidate, setSelectedCandidate] = useState<RankedCandidate | null>(null);
+
+  useEffect(() => {
+    if (userId) {
+      fetchHistory(userId);
+    }
+  }, []);
 
   return (
     <div className="flex flex-col gap-8 max-w-5xl mx-auto pb-12">

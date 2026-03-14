@@ -80,7 +80,7 @@ export function Sidebar() {
             );
           })}
         </nav>
-        <div className="p-4 border-t border-base-300">
+        <div className="p-4 border-t border-base-300 hidden">
           <div className="bg-base-200 rounded-xl p-4">
             <p className="text-xs font-semibold text-base-content/50 uppercase mb-2">Plan: Professional</p>
             <div className="w-full bg-base-300 h-1.5 rounded-full overflow-hidden">

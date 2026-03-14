@@ -14,6 +14,8 @@ type AppsContextType = {
   userId: string;
   setHistory: React.Dispatch<React.SetStateAction<RankingHistoryItem[]>>;
   setCandidates: React.Dispatch<React.SetStateAction<CVFile[]>>;
+  fetchCandidates: (id: string) => Promise<void>;
+  fetchHistory: (id: string) => Promise<void>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setError: React.Dispatch<React.SetStateAction<string | null>>;
 };
@@ -81,6 +83,8 @@ function AppsProvider({ children }: { children: ReactNode }) {
     <AppsContext.Provider
       value={{
         data,
+        fetchCandidates,
+        fetchHistory,
         candidates,
         isLoading,
         error,
