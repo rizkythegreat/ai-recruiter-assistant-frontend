@@ -20,20 +20,29 @@ export const metadata: Metadata = {
   icons: {
     icon: "/logo-cv-assistants.png"
   },
-  metadataBase: new URL('https://ai-recruiter-assistant.pages.dev'),
+  metadataBase: new URL('https://ai-recruiter.rizkyrahmansalam.my.id/'),
   openGraph: {
     title: "RecruitAI - AI-Powered Recruitment Assistant",
     description: "Efficiently rank and analyze candidates with AI.",
-    url: "https://ai-recruiter-assistant.pages.dev",
+    url: "https://ai-recruiter.rizkyrahmansalam.my.id/",
     siteName: 'RecruitAI',
     images: [
       {
-        url: '/logo-cv-assistants.png'
+        url: '/screenshots/preview-1.png',
+        width: 1200,
+        height: 630,
+        alt: "RecruitAI Dashboard Preview"
       }
     ],
     locale: 'id_ID',
     type: 'website'
-  }
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "RecruitAI - AI-Powered Recruitment Assistant",
+    description: "Efficiently rank and analyze candidates with AI.",
+    images: ["/screenshots/preview-1.png"],
+  },
 };
 
 export default function RootLayout({
