@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'RecruitAI - AI-Powered Recruitment Assistant',
     description: 'Efficiently rank and analyze candidates with AI.',
-    images: ['/screenshots/preview-1.png']
+    images: ['/screenshots/og-preview.png']
   }
 };
 
