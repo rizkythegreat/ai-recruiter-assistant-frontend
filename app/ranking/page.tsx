@@ -8,9 +8,11 @@ import {
   User,
   AlertCircle,
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  UploadCloud
 } from 'lucide-react';
 import { useState } from 'react';
+import Link from 'next/link';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { rankCandidates } from '@/services/ranking.service';
@@ -110,7 +112,7 @@ Nice to have:
 ];
 
 export default function RankingPage() {
-  const { userId } = useApps();
+  const { userId, candidates, isLoading: isCandidatesLoading } = useApps();
   const [jobTitle, setJobTitle] = useState('');
   const [jobDescription, setJobDescription] = useState('');
   const [isRanking, setIsRanking] = useState(false);
@@ -162,7 +164,7 @@ export default function RankingPage() {
                 setJobTitle(preset.title);
                 setJobDescription(preset.description);
               }}
-              className="flex items-center gap-2 px-4 py-2.5 bg-base-100 border border-base-300 rounded-xl text-sm font-medium text-base-content hover:border-primary hover:bg-primary/5 hover:text-primary transition-all shrink-0 snap-start group">
+              className="flex bg-base-100 cursor-pointer items-center gap-2 px-4 py-2.5 border border-base-300 rounded-xl text-sm font-medium text-base-content hover:border-primary hover:bg-primary/5 hover:text-primary transition-all shrink-0 snap-start group">
               <span className="text-base">{preset.icon}</span>
               <span>{preset.label}</span>
               <ChevronRight className="w-3.5 h-3.5 text-base-content/30 group-hover:text-primary transition-colors" />
@@ -170,6 +172,28 @@ export default function RankingPage() {
           ))}
         </div>
       </div>
+
+      {/* Empty Candidates Warning */}
+      {!isCandidatesLoading && candidates.length === 0 && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 bg-amber-50 border border-amber-200 rounded-2xl">
+          <div className="w-10 h-10 shrink-0 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600">
+            <UploadCloud className="w-5 h-5" />
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold text-amber-900 text-sm">No candidates in database</p>
+            <p className="text-amber-700 text-xs mt-0.5">
+              You need to upload candidate CVs first before running a ranking. Go to Upload Center
+              to get started.
+            </p>
+          </div>
+          <Link
+            href="/upload"
+            className="btn btn-sm bg-amber-500 hover:bg-amber-600 border-none text-white shrink-0 gap-2">
+            <UploadCloud className="w-4 h-4" />
+            Upload CVs
+          </Link>
+        </div>
+      )}
 
       <div className="bg-base-100 border border-base-300 p-4 sm:p-6 shadow-sm rounded-xl">
         <div className="flex flex-col gap-4">
@@ -200,7 +224,9 @@ export default function RankingPage() {
         <div className="flex justify-center sm:justify-end mt-4">
           <button
             onClick={startRanking}
-            disabled={isRanking || !jobDescription.trim() || !jobTitle.trim()}
+            disabled={
+              isRanking || !jobDescription.trim() || !jobTitle.trim() || candidates.length === 0
+            }
             className="btn btn-primary w-full sm:w-auto px-8">
             {isRanking ? (
               <>
