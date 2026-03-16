@@ -19,6 +19,20 @@ export const metadata: Metadata = {
   description: "Efficiently rank and analyze candidates with AI.",
   icons: {
     icon: "/logo-cv-assistants.png"
+  },
+  metadataBase: new URL('https://ai-recruiter-assistant.pages.dev'),
+  openGraph: {
+    title: "RecruitAI - AI-Powered Recruitment Assistant",
+    description: "Efficiently rank and analyze candidates with AI.",
+    url: "https://ai-recruiter-assistant.pages.dev",
+    siteName: 'RecruitAI',
+    images: [
+      {
+        url: '/logo-cv-assistants.png'
+      }
+    ],
+    locale: 'id_ID',
+    type: 'website'
   }
 };
 
