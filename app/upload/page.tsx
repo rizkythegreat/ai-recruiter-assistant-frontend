@@ -166,7 +166,7 @@ export default function UploadPage() {
 
       <div
         {...getRootProps()}
-        className={`mt-2 border-2 border-dashed rounded-3xl p-16 flex flex-col items-center justify-center transition-all cursor-pointer ${
+        className={`mt-2 border-2 border-dashed rounded-3xl p-8 sm:p-16 flex flex-col items-center justify-center transition-all cursor-pointer ${
           isDragActive
             ? 'border-emerald-500 bg-emerald-50/50 scale-[1.01]'
             : 'border-slate-200 hover:border-slate-300 bg-white shadow-sm'
@@ -181,11 +181,14 @@ export default function UploadPage() {
           Supports PDF, DOCX (Max 10MB)
         </p>
       </div>
-      <div className="flex gap-4 justify-end">
+      <div className="flex gap-4 justify-between items-center flex-wrap">
+        <p className="text-xs text-slate-400">
+          Or use pre-built sample CVs to quickly explore the app.
+        </p>
         <button
           onClick={loadSampleData}
           disabled={isUploading || hasLoadedSamples}
-          className="flex cursor-pointer items-center gap-2 px-4 border-2 border-dashed hover:border-slate-300 border-slate-200 py-2 bg-white hover:bg-slate-200 text-slate-700 rounded-lg transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+          className="flex cursor-pointer items-center gap-2 px-4 border-2 border-dashed hover:border-slate-300 border-slate-200 py-2 bg-white hover:bg-slate-200 text-slate-700 rounded-lg transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed shrink-0">
           <Database className="w-4 h-4" />
           {hasLoadedSamples ? 'Sample Data Added' : 'Use Sample Data'}
         </button>
@@ -193,10 +196,15 @@ export default function UploadPage() {
 
       {files.length > 0 && (
         <div className="bg-base-100 border border-base-300 rounded-xl overflow-hidden shadow-sm">
-          <div className="p-4 border-b border-base-300 bg-base-200 flex items-center justify-between">
+          <div className="p-4 border-b border-base-300 bg-base-200 flex flex-wrap items-center justify-between gap-2">
             <h3 className="font-semibold text-sm">Files to upload ({files.length})</h3>
-            <div>
-              {!isUploading && (
+            <div className="flex items-center gap-2">
+              {isUploading ? (
+                <div className="flex items-center gap-2 text-primary text-sm font-medium">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span className="hidden sm:inline">Processing with AI...</span>
+                </div>
+              ) : (
                 <button
                   onClick={startUpload}
                   disabled={files.every((f) => f.status === 'completed')}
@@ -211,17 +219,11 @@ export default function UploadPage() {
                     setHasLoadedSamples(false);
                   }}
                   disabled={isUploading}
-                  className="px-4 py-2 cursor-pointer text-slate-500 hover:text-slate-800 transition-colors disabled:opacity-50">
+                  className="px-3 py-1.5 cursor-pointer text-slate-500 hover:text-slate-800 text-sm transition-colors disabled:opacity-50">
                   Clear All
                 </button>
               )}
             </div>
-            {isUploading && (
-              <div className="flex items-center gap-2 text-primary text-sm font-medium">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Processing with AI...
-              </div>
-            )}
           </div>
           <div className="divide-y divide-base-200 max-h-96 overflow-y-auto">
             {files.map((fileObj, idx) => (

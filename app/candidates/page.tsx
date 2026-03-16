@@ -134,7 +134,7 @@ export default function CandidatesPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 items-center justify-between">
+      <div className="flex flex-col gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-base-content leading-tight">
             Candidate Management
@@ -143,46 +143,50 @@ export default function CandidatesPage() {
             Manage all CVs stored in the recruitment database.
           </p>
         </div>
-        <div className="flex gap-3">
-          <div className="relative">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative flex-1 min-w-0">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40" />
             <input
               type="text"
               placeholder="Search candidates..."
-              className="input focus:outline-none input-sm pl-10 w-64"
+              className="input focus:outline-none input-sm pl-10 w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <button className="btn btn-outline btn-sm gap-2" onClick={handleClickSearch}>
-            <Filter className="w-4 h-4" />
-            Refresh
-          </button>
-          {!isSelectMode ? (
-            <button className="btn btn-outline btn-sm gap-2" onClick={() => setIsSelectMode(true)}>
-              <CheckSquare className="w-4 h-4" />
-              Select
+          <div className="flex items-center gap-2 shrink-0">
+            <button className="btn btn-outline btn-sm gap-2" onClick={handleClickSearch}>
+              <Filter className="w-4 h-4" />
+              <span className="hidden sm:inline">Refresh</span>
             </button>
-          ) : (
-            <>
+            {!isSelectMode ? (
               <button
-                className="btn btn-ghost btn-sm gap-2 text-base-content/60"
-                onClick={exitSelectMode}>
-                Cancel
+                className="btn btn-outline btn-sm gap-2"
+                onClick={() => setIsSelectMode(true)}>
+                <CheckSquare className="w-4 h-4" />
+                <span className="hidden sm:inline">Select</span>
               </button>
-              <button
-                className="btn btn-error btn-sm gap-2"
-                onClick={confirmDeleteSelected}
-                disabled={isDeletingMultiple || selectedIds.length === 0}>
-                {isDeletingMultiple ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Trash2 className="w-4 h-4" />
-                )}
-                Delete {selectedIds.length > 0 && `(${selectedIds.length})`}
-              </button>
-            </>
-          )}
+            ) : (
+              <>
+                <button
+                  className="btn btn-ghost btn-sm gap-2 text-base-content/60"
+                  onClick={exitSelectMode}>
+                  Cancel
+                </button>
+                <button
+                  className="btn btn-error btn-sm gap-2"
+                  onClick={confirmDeleteSelected}
+                  disabled={isDeletingMultiple || selectedIds.length === 0}>
+                  {isDeletingMultiple ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="w-4 h-4" />
+                  )}
+                  Delete {selectedIds.length > 0 && `(${selectedIds.length})`}
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -213,10 +217,10 @@ export default function CandidatesPage() {
               <th className="text-xs font-semibold text-base-content/60 uppercase tracking-wider">
                 Candidate Name / File
               </th>
-              <th className="text-xs font-semibold text-base-content/60 uppercase tracking-wider">
+              <th className="text-xs font-semibold text-base-content/60 uppercase tracking-wider hidden sm:table-cell">
                 Upload Date
               </th>
-              <th className="text-xs font-semibold text-base-content/60 uppercase tracking-wider">
+              <th className="text-xs font-semibold text-base-content/60 uppercase tracking-wider hidden xs:table-cell">
                 Status
               </th>
               <th className="text-xs font-semibold text-base-content/60 uppercase tracking-wider text-right">
@@ -247,13 +251,18 @@ export default function CandidatesPage() {
                         />
                       </td>
                     )}
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-base-content">{c.file_name}</span>
+                    <td className="px-4 sm:px-6 py-4">
+                      <div className="flex flex-col">
+                        <span className="font-medium text-base-content">{c.file_name}</span>
+                        <span className="text-xs text-base-content/50 mt-0.5 sm:hidden">
+                          {formatFullDate(c.upload_date)}
+                        </span>
+                      </div>
                     </td>
-                    <td className="px-6 py-4 text-base-content/60">
+                    <td className="px-4 sm:px-6 py-4 text-base-content/60 hidden sm:table-cell">
                       {formatFullDate(c.upload_date)}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4 hidden xs:table-cell">
                       <span
                         className={`badge badge-sm font-medium ${
                           (c.status ?? 'Indexed') === 'Indexed'
