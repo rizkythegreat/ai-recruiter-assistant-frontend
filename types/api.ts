@@ -3,8 +3,8 @@
 // ─────────────────────────────────────────────
 export interface CVFile {
   file_name: string;
-  upload_date?: string;       // ISO date string, if returned by backend
-  status?: "Indexed" | "Indexing...";
+  upload_date?: string; // ISO date string, if returned by backend
+  status?: 'Indexed' | 'Indexing...';
 }
 
 export interface ListCVResponse {
@@ -14,14 +14,14 @@ export interface ListCVResponse {
 
 export interface Candidate {
   metadata?: {
-    summary: any,
-    top_skills: any,
-    years_of_experience: any,
-    location: any
-  },
-  upload_date?: any,
-  status?: any,
-  file_name: any
+    summary: any;
+    top_skills: any;
+    years_of_experience: any;
+    location: any;
+  };
+  upload_date?: any;
+  status?: any;
+  file_name: any;
 }
 
 // ─────────────────────────────────────────────
@@ -51,15 +51,20 @@ export interface RankedCandidateMetadata {
 }
 
 export interface RankedCandidateAnalysis {
-  reason: string;
-  suitability_tag: string;    // e.g. "High Match", "Medium Match", "Low Match"
+  reason?: string;
+  summary?: string;
+  suitability_tag: string; // e.g. "High Match", "Medium Match", "Low Match"
+  recommendation?: string;
 }
 
 export interface RankedCandidate {
-  candidate: string;          // CV filename
-  score: number;              // 0 – 100
+  candidate: string; // CV filename
+  score: number; // 0 – 100
   metadata: RankedCandidateMetadata;
   analysis: RankedCandidateAnalysis;
+  strengths?: string[];
+  weaknesses?: string[];
+  red_flags?: string[];
   rank: number;
 }
 

@@ -379,14 +379,16 @@ export default function RankingPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
                 {/* Main Info */}
                 <div className="md:col-span-2 flex flex-col gap-6 order-2 md:order-1">
-                  <section>
-                    <h3 className="text-xs font-bold uppercase tracking-widest text-primary mb-3">
-                      AI Matching Reason
-                    </h3>
-                    <p className="text-sm sm:text-base text-base-content/90 leading-relaxed bg-base-200/50 p-4 rounded-2xl border border-base-300">
-                      {selectedCandidate.analysis.reason}
-                    </p>
-                  </section>
+                  {(selectedCandidate.analysis.reason || selectedCandidate.analysis.summary) && (
+                    <section>
+                      <h3 className="text-xs font-bold uppercase tracking-widest text-primary mb-3">
+                        AI Assessment
+                      </h3>
+                      <p className="text-sm sm:text-base text-base-content/90 leading-relaxed bg-base-200/50 p-4 rounded-2xl border border-base-300">
+                        {selectedCandidate.analysis.reason || selectedCandidate.analysis.summary}
+                      </p>
+                    </section>
+                  )}
 
                   <section className="bg-primary/5 p-5 rounded-2xl border border-primary/10">
                     <div className="flex items-center gap-2 mb-4 text-primary font-bold text-sm">
@@ -403,6 +405,83 @@ export default function RankingPage() {
                       ))}
                     </div>
                   </section>
+
+                  {selectedCandidate.strengths && selectedCandidate.strengths.length > 0 && (
+                    <section className="bg-success/5 p-5 rounded-2xl border border-success/20">
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-8 h-8 bg-success/20 rounded-lg flex items-center justify-center">
+                          <CheckSquare className="w-4 h-4 text-success" />
+                        </div>
+                        <h3 className="text-sm font-bold text-success">Strengths</h3>
+                      </div>
+                      <ul className="space-y-2">
+                        {selectedCandidate.strengths.map((strength, idx) => (
+                          <li
+                            key={idx}
+                            className="flex items-start gap-3 text-sm text-base-content/80">
+                            <span className="w-1.5 h-1.5 rounded-full bg-success mt-2 shrink-0" />
+                            <span className="leading-relaxed">{strength}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  )}
+
+                  {selectedCandidate.weaknesses && selectedCandidate.weaknesses.length > 0 && (
+                    <section className="bg-warning/5 p-5 rounded-2xl border border-warning/20">
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-8 h-8 bg-warning/20 rounded-lg flex items-center justify-center">
+                          <AlertCircle className="w-4 h-4 text-warning" />
+                        </div>
+                        <h3 className="text-sm font-bold text-warning">Areas for Development</h3>
+                      </div>
+                      <ul className="space-y-2">
+                        {selectedCandidate.weaknesses.map((weakness, idx) => (
+                          <li
+                            key={idx}
+                            className="flex items-start gap-3 text-sm text-base-content/80">
+                            <span className="w-1.5 h-1.5 rounded-full bg-warning mt-2 shrink-0" />
+                            <span className="leading-relaxed">{weakness}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  )}
+
+                  {selectedCandidate.red_flags && selectedCandidate.red_flags.length > 0 && (
+                    <section className="bg-error/5 p-5 rounded-2xl border border-error/20">
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-8 h-8 bg-error/20 rounded-lg flex items-center justify-center">
+                          <AlertCircle className="w-4 h-4 text-error" />
+                        </div>
+                        <h3 className="text-sm font-bold text-error">Red Flags & Concerns</h3>
+                      </div>
+                      <ul className="space-y-2">
+                        {selectedCandidate.red_flags.map((flag, idx) => (
+                          <li
+                            key={idx}
+                            className="flex items-start gap-3 text-sm text-base-content/80">
+                            <span className="w-1.5 h-1.5 rounded-full bg-error mt-2 shrink-0" />
+                            <span className="leading-relaxed">{flag}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  )}
+
+                  {selectedCandidate.analysis.recommendation && (
+                    <section className="bg-info/5 p-5 rounded-2xl border border-info/20">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-8 bg-info/20 rounded-lg flex items-center justify-center">
+                          <Sparkles className="w-4 h-4 text-info" />
+                        </div>
+                        <h3 className="text-sm font-bold text-info">AI Recommendation</h3>
+                      </div>
+                      <p className="text-sm text-base-content/80 leading-relaxed">
+                        {selectedCandidate.analysis.recommendation}
+                      </p>
+                    </section>
+                  )}
 
                   <div className="grid grid-cols-2 gap-3 sm:gap-4">
                     <div className="bg-base-200/50 rounded-2xl p-4 border border-base-300">
@@ -448,7 +527,7 @@ export default function RankingPage() {
             </div>
 
             {/* Floating Action Buttons untuk Mobile */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-linear-to-t from-base-100 via-base-100 to-transparent sm:relative sm:p-8 sm:bg-none flex flex-col gap-3">
+            <div className="absolute hidden bottom-0 left-0 right-0 p-4 bg-linear-to-t from-base-100 via-base-100 to-transparent sm:relative sm:p-8 sm:bg-none flex-col gap-3">
               <button className="btn btn-primary w-full h-12 rounded-xl text-base font-bold shadow-lg shadow-primary/30">
                 Contact Candidate
               </button>
