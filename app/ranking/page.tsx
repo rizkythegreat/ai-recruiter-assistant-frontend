@@ -1,16 +1,6 @@
 'use client';
 
-import {
-  Search,
-  BrainCircuit,
-  X,
-  CheckSquare,
-  User,
-  AlertCircle,
-  Sparkles,
-  ChevronRight,
-  UploadCloud
-} from 'lucide-react';
+import { Search, BrainCircuit, ChevronRight, UploadCloud, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
@@ -18,98 +8,9 @@ import 'react-circular-progressbar/dist/styles.css';
 import { rankCandidates } from '@/services/ranking.service';
 import type { RankedCandidate } from '@/types/api';
 import { useApps } from '../hooks/useApps';
-
-const JOB_PRESETS = [
-  {
-    icon: '🧠',
-    label: 'Data Scientist',
-    title: 'Data Scientist / ML Engineer',
-    description: `We are looking for a Data Scientist to join our team and help us turn data into actionable insights.
-
-Requirements:
-- Proficiency in Python (Pandas, NumPy, Scikit-Learn, TensorFlow)
-- Experience with machine learning algorithms (regression, classification, clustering)
-- Ability to perform data analysis, feature engineering, and model evaluation
-- Familiarity with SQL for data querying
-- Experience with data visualization tools (Tableau, Matplotlib, Seaborn)
-- Strong analytical and problem-solving skills
-
-Nice to have:
-- Background in engineering or science fields
-- Experience with predictive modeling in industrial or e-commerce settings`
-  },
-  {
-    icon: '⚙️',
-    label: 'Backend Engineer',
-    title: 'Senior Backend Engineer',
-    description: `We are hiring a Senior Backend Engineer to design and scale our distributed backend systems.
-
-Requirements:
-- 5+ years of experience in backend development
-- Expert-level proficiency in Go or Python
-- Strong experience with cloud platforms (AWS, GCP) and containerization (Docker, Kubernetes)
-- Deep knowledge of databases: PostgreSQL, Redis, MongoDB
-- Experience building microservices with gRPC or REST
-- Familiarity with CI/CD pipelines and DevOps practices
-
-Nice to have:
-- AWS or Kubernetes certifications
-- Experience with Kafka or event-driven architecture`
-  },
-  {
-    icon: '☁️',
-    label: 'DevOps Engineer',
-    title: 'DevOps / Cloud Infrastructure Engineer',
-    description: `We are looking for a DevOps Engineer to automate, scale, and maintain our cloud infrastructure.
-
-Requirements:
-- Hands-on experience with Infrastructure as Code (Terraform, Ansible)
-- Proficiency with CI/CD tools: Jenkins, GitHub Actions, or GitLab CI
-- Experience with AWS or Google Cloud Platform (GCP)
-- Knowledge of monitoring and observability tools (Prometheus, Grafana)
-- Solid understanding of Linux systems and networking
-
-Nice to have:
-- Experience managing multi-region cloud deployments
-- Background in system administration or on-premise infrastructure`
-  },
-  {
-    icon: '💻',
-    label: 'Full-Stack Dev',
-    title: 'Junior Full-Stack Developer',
-    description: `We are looking for a motivated Junior Full-Stack Developer to build and maintain web applications.
-
-Requirements:
-- Proficiency in JavaScript/ES6, HTML, and CSS
-- Experience with Node.js and Express for backend development
-- Familiarity with MongoDB or MySQL
-- Basic understanding of REST API design
-- Experience with Git and version control workflows
-
-Nice to have:
-- Experience with Java Spring Boot
-- Familiarity with frontend frameworks such as React or Vue.js
-- Strong academic background in Computer Science or Information Systems`
-  },
-  {
-    icon: '🎨',
-    label: 'Frontend Dev',
-    title: 'Senior Frontend Developer (React/Next.js)',
-    description: `We are seeking a skilled Frontend Developer to build fast, responsive, and accessible web applications.
-
-Requirements:
-- 3+ years of experience with React and Next.js
-- Strong command of TypeScript and Tailwind CSS
-- Experience with state management (Redux, Zustand, or Context API)
-- Ability to write unit and integration tests (Jest, Cypress)
-- Understanding of Core Web Vitals and performance optimization
-
-Nice to have:
-- Experience building and maintaining UI component libraries
-- Proficiency in Figma for UI/UX design collaboration
-- Experience with Framer Motion or animation libraries`
-  }
-];
+import CandidateDetailModal from '@/components/candidate-detail-modal';
+import ErrorAlert from '@/components/error-alert';
+import { JOB_PRESETS } from '@/utils/jobPreset';
 
 export default function RankingPage() {
   const { userId, candidates, isLoading: isCandidatesLoading } = useApps();
@@ -243,15 +144,7 @@ export default function RankingPage() {
         </div>
       </div>
 
-      {rankError && (
-        <div role="alert" className="alert alert-error">
-          <AlertCircle className="w-5 h-5" />
-          <span>{rankError}</span>
-          <button className="btn btn-sm btn-ghost" onClick={() => setRankError(null)}>
-            Dismiss
-          </button>
-        </div>
-      )}
+      {rankError && <ErrorAlert message={rankError} onDismiss={() => setRankError(null)} />}
 
       {isRanking && (
         <div className="flex flex-col gap-4">
@@ -333,209 +226,12 @@ export default function RankingPage() {
         </div>
       )}
 
-      {/* Candidate Detail Modal Implementation */}
+      {/* Candidate Detail Modal */}
       {selectedCandidate && (
-        <div className="fixed inset-0 z-100 flex items-end sm:items-center justify-center">
-          {/* Backdrop dengan overscroll-none untuk mencegah scroll bocor ke background */}
-          <div
-            className="absolute inset-0 bg-neutral-900/80 backdrop-blur-sm"
-            onClick={() => setSelectedCandidate(null)}
-          />
-
-          <div
-            className="relative bg-base-100 w-full max-w-4xl 
-            /* Solusi Tinggi Mobile: Gunakan dvh agar tidak terpotong address bar */
-            h-[92dvh] sm:h-auto sm:max-h-[90vh] 
-            rounded-t-4xl sm:rounded-3xl 
-            overflow-hidden shadow-2xl border border-base-300 flex flex-col
-            transition-all duration-300 ease-out transform translate-y-0">
-            {/* Handle Bar untuk Mobile (Visual cue bahwa ini bisa di-scroll/tutup) */}
-            <div className="w-12 h-1.5 bg-base-300 rounded-full mx-auto my-3 sm:hidden" />
-
-            {/* Header: Dibuat Sticky agar navigasi tutup selalu terlihat */}
-            <div className="sticky top-0 z-10 px-6 py-4 sm:p-8 border-b border-base-300 flex items-center justify-between bg-base-100/80 backdrop-blur-md">
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-xl flex items-center justify-center border border-primary/20 text-primary">
-                  <User className="w-5 h-5 sm:w-6 sm:h-6" />
-                </div>
-                <div>
-                  <h2 className="text-lg sm:text-2xl font-bold text-base-content leading-tight truncate max-w-45 sm:max-w-none">
-                    {selectedCandidate.candidate}
-                  </h2>
-                  <p className="text-[10px] sm:text-sm text-base-content/60 font-medium uppercase tracking-wider">
-                    Candidate Analysis
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setSelectedCandidate(null)}
-                className="btn btn-ghost btn-circle btn-sm bg-base-200 sm:bg-transparent">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Content Area */}
-            <div className="flex-1 overflow-y-auto p-6 sm:p-8 pb-34 sm:pb-8 custom-scrollbar">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-                {/* Sidebar / Score: Di mobile muncul di atas (order-1) agar info utama langsung terlihat */}
-                <div className="flex flex-col gap-4 order-2 md:order-1 sm:sticky sm:top-2 self-start">
-                  <div className="bg-linear-to-br from-primary to-primary-focus text-primary-content rounded-4xl p-6 text-center shadow-xl shadow-primary/20">
-                    <p className="text-[10px] font-bold uppercase mb-4 opacity-80 tracking-widest">
-                      Matching Score
-                    </p>
-                    <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-4">
-                      <CircularProgressbar
-                        value={selectedCandidate.score}
-                        text={`${selectedCandidate.score}%`}
-                        styles={buildStyles({
-                          pathColor: 'white',
-                          textColor: 'white',
-                          trailColor: 'rgba(255,255,255,0.2)',
-                          textSize: '26px'
-                        })}
-                      />
-                    </div>
-                    <div
-                      className={`text-[10px] font-bold px-4 py-1.5 rounded-full inline-block bg-white/20 backdrop-blur-md border border-white/30`}>
-                      {selectedCandidate.analysis.suitability_tag}
-                    </div>
-                  </div>
-                </div>
-                {/* Main Info */}
-                <div className="md:col-span-2 flex flex-col gap-6 order-2 md:order-1">
-                  {(selectedCandidate.analysis.reason || selectedCandidate.analysis.summary) && (
-                    <section>
-                      <h3 className="text-xs font-bold uppercase tracking-widest text-primary mb-3">
-                        AI Assessment
-                      </h3>
-                      <p className="text-sm sm:text-base text-base-content/90 leading-relaxed bg-base-200/50 p-4 rounded-2xl border border-base-300">
-                        {selectedCandidate.analysis.reason || selectedCandidate.analysis.summary}
-                      </p>
-                    </section>
-                  )}
-
-                  <section className="bg-primary/5 p-5 rounded-2xl border border-primary/10">
-                    <div className="flex items-center gap-2 mb-4 text-primary font-bold text-sm">
-                      <CheckSquare className="w-4 h-4" />
-                      Key Competencies
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedCandidate.metadata.top_skills.map((skill) => (
-                        <span
-                          key={skill}
-                          className="badge badge-white border-base-300 shadow-sm py-3 px-4 font-medium text-xs">
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </section>
-
-                  {selectedCandidate.strengths && selectedCandidate.strengths.length > 0 && (
-                    <section className="bg-success/5 p-5 rounded-2xl border border-success/20">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-8 h-8 bg-success/20 rounded-lg flex items-center justify-center">
-                          <CheckSquare className="w-4 h-4 text-success" />
-                        </div>
-                        <h3 className="text-sm font-bold text-success">Strengths</h3>
-                      </div>
-                      <ul className="space-y-2">
-                        {selectedCandidate.strengths.map((strength, idx) => (
-                          <li
-                            key={idx}
-                            className="flex items-start gap-3 text-sm text-base-content/80">
-                            <span className="w-1.5 h-1.5 rounded-full bg-success mt-2 shrink-0" />
-                            <span className="leading-relaxed">{strength}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
-                  )}
-
-                  {selectedCandidate.weaknesses && selectedCandidate.weaknesses.length > 0 && (
-                    <section className="bg-warning/5 p-5 rounded-2xl border border-warning/20">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-8 h-8 bg-warning/20 rounded-lg flex items-center justify-center">
-                          <AlertCircle className="w-4 h-4 text-warning" />
-                        </div>
-                        <h3 className="text-sm font-bold text-warning">Areas for Development</h3>
-                      </div>
-                      <ul className="space-y-2">
-                        {selectedCandidate.weaknesses.map((weakness, idx) => (
-                          <li
-                            key={idx}
-                            className="flex items-start gap-3 text-sm text-base-content/80">
-                            <span className="w-1.5 h-1.5 rounded-full bg-warning mt-2 shrink-0" />
-                            <span className="leading-relaxed">{weakness}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
-                  )}
-
-                  {selectedCandidate.red_flags && selectedCandidate.red_flags.length > 0 && (
-                    <section className="bg-error/5 p-5 rounded-2xl border border-error/20">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-8 h-8 bg-error/20 rounded-lg flex items-center justify-center">
-                          <AlertCircle className="w-4 h-4 text-error" />
-                        </div>
-                        <h3 className="text-sm font-bold text-error">Red Flags & Concerns</h3>
-                      </div>
-                      <ul className="space-y-2">
-                        {selectedCandidate.red_flags.map((flag, idx) => (
-                          <li
-                            key={idx}
-                            className="flex items-start gap-3 text-sm text-base-content/80">
-                            <span className="w-1.5 h-1.5 rounded-full bg-error mt-2 shrink-0" />
-                            <span className="leading-relaxed">{flag}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
-                  )}
-
-                  {selectedCandidate.analysis.recommendation && (
-                    <section className="bg-info/5 p-5 rounded-2xl border border-info/20">
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 bg-info/20 rounded-lg flex items-center justify-center">
-                          <Sparkles className="w-4 h-4 text-info" />
-                        </div>
-                        <h3 className="text-sm font-bold text-info">AI Recommendation</h3>
-                      </div>
-                      <p className="text-sm text-base-content/80 leading-relaxed">
-                        {selectedCandidate.analysis.recommendation}
-                      </p>
-                    </section>
-                  )}
-
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                    <div className="bg-base-200/50 rounded-2xl p-4 border border-base-300">
-                      <p className="text-[10px] font-bold uppercase opacity-50 mb-1">Experience</p>
-                      <p className="text-lg sm:text-xl font-bold">
-                        {selectedCandidate.metadata.years_of_experience} Yrs
-                      </p>
-                    </div>
-                    <div className="bg-base-200/50 rounded-2xl p-4 border border-base-300">
-                      <p className="text-[10px] font-bold uppercase opacity-50 mb-1">Location</p>
-                      <p className="text-sm sm:text-base font-bold truncate">
-                        {selectedCandidate.metadata.location}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Floating Action Buttons untuk Mobile */}
-            <div className="absolute hidden bottom-0 left-0 right-0 p-4 bg-linear-to-t from-base-100 via-base-100 to-transparent sm:relative sm:p-8 sm:bg-none flex-col gap-3">
-              <button className="btn btn-primary w-full h-12 rounded-xl text-base font-bold shadow-lg shadow-primary/30">
-                Contact Candidate
-              </button>
-              <button className="btn btn-ghost sm:btn-outline w-full h-12 rounded-xl text-base font-bold">
-                Download PDF
-              </button>
-            </div>
-          </div>
-        </div>
+        <CandidateDetailModal
+          candidate={selectedCandidate}
+          onClose={() => setSelectedCandidate(null)}
+        />
       )}
     </div>
   );

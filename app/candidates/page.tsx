@@ -6,12 +6,10 @@ import {
   Search,
   Filter,
   Loader2,
-  AlertCircle,
-  ChevronLeft,
-  ChevronRight,
   X,
   User,
-  CheckSquare
+  CheckSquare,
+  AlertCircle
 } from 'lucide-react';
 import { useEffect, useState, useMemo } from 'react';
 import { deleteCV } from '@/services/cv.service';
@@ -19,6 +17,8 @@ import { formatFullDate } from '@/utils/dateFormat';
 import { useApps } from '../hooks/useApps';
 import type { Candidate } from '@/types/api';
 import { ConfirmModal } from '@/components/confirm-modal';
+import ErrorAlert from '@/components/error-alert';
+import Pagination from '@/components/pagination';
 
 export default function CandidatesPage() {
   const { candidates, setCandidates, isLoading, error, setError, userId, fetchCandidates } =
@@ -190,15 +190,7 @@ export default function CandidatesPage() {
         </div>
       </div>
 
-      {error && (
-        <div role="alert" className="alert alert-error">
-          <AlertCircle className="w-5 h-5" />
-          <span>{error}</span>
-          <button className="btn btn-sm btn-ghost" onClick={() => setError(null)}>
-            Dismiss
-          </button>
-        </div>
-      )}
+      {error && <ErrorAlert message={error} onDismiss={() => setError(null)} />}
 
       <div className="bg-base-100 border border-base-300 rounded-xl overflow-x-auto shadow-sm">
         <table className="table w-full">
@@ -300,40 +292,14 @@ export default function CandidatesPage() {
 
         {/* Pagination Footer */}
         {!isLoading && filtered.length > 0 && (
-          <div className="p-4 border-t border-base-300 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <span className="text-xs text-base-content/50">
-              Showing {Math.min(filtered.length, (currentPage - 1) * itemsPerPage + 1)} to{' '}
-              {Math.min(filtered.length, currentPage * itemsPerPage)} of {filtered.length}{' '}
-              candidates
-            </span>
-            <div className="flex items-center gap-1">
-              <button
-                className="btn btn-xs btn-ghost"
-                disabled={currentPage === 1}
-                onClick={() => handlePageChange(currentPage - 1)}>
-                <ChevronLeft className="w-4 h-4" />
-                Prev
-              </button>
-
-              <div className="join">
-                {[...Array(totalPages)].map((_, i) => (
-                  <button
-                    key={i + 1}
-                    className={`join-item btn btn-xs ${currentPage === i + 1 ? 'btn-primary' : 'btn-ghost'}`}
-                    onClick={() => handlePageChange(i + 1)}>
-                    {i + 1}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                className="btn btn-xs btn-ghost"
-                disabled={currentPage === totalPages}
-                onClick={() => handlePageChange(currentPage + 1)}>
-                Next
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
+          <div className="p-4 border-t border-base-300">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              itemsPerPage={itemsPerPage}
+              totalItems={filtered.length}
+            />
           </div>
         )}
 
