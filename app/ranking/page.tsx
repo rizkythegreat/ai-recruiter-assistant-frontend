@@ -377,6 +377,30 @@ export default function RankingPage() {
             {/* Content Area */}
             <div className="flex-1 overflow-y-auto p-6 sm:p-8 pb-34 sm:pb-8 custom-scrollbar">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                {/* Sidebar / Score: Di mobile muncul di atas (order-1) agar info utama langsung terlihat */}
+                <div className="flex flex-col gap-4 order-2 md:order-1 sm:sticky sm:top-2 self-start">
+                  <div className="bg-linear-to-br from-primary to-primary-focus text-primary-content rounded-4xl p-6 text-center shadow-xl shadow-primary/20">
+                    <p className="text-[10px] font-bold uppercase mb-4 opacity-80 tracking-widest">
+                      Matching Score
+                    </p>
+                    <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-4">
+                      <CircularProgressbar
+                        value={selectedCandidate.score}
+                        text={`${selectedCandidate.score}%`}
+                        styles={buildStyles({
+                          pathColor: 'white',
+                          textColor: 'white',
+                          trailColor: 'rgba(255,255,255,0.2)',
+                          textSize: '26px'
+                        })}
+                      />
+                    </div>
+                    <div
+                      className={`text-[10px] font-bold px-4 py-1.5 rounded-full inline-block bg-white/20 backdrop-blur-md border border-white/30`}>
+                      {selectedCandidate.analysis.suitability_tag}
+                    </div>
+                  </div>
+                </div>
                 {/* Main Info */}
                 <div className="md:col-span-2 flex flex-col gap-6 order-2 md:order-1">
                   {(selectedCandidate.analysis.reason || selectedCandidate.analysis.summary) && (
@@ -495,31 +519,6 @@ export default function RankingPage() {
                       <p className="text-sm sm:text-base font-bold truncate">
                         {selectedCandidate.metadata.location}
                       </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Sidebar / Score: Di mobile muncul di atas (order-1) agar info utama langsung terlihat */}
-                <div className="flex flex-col gap-4 order-1 md:order-2">
-                  <div className="bg-linear-to-br from-primary to-primary-focus text-primary-content rounded-4xl p-6 text-center shadow-xl shadow-primary/20">
-                    <p className="text-[10px] font-bold uppercase mb-4 opacity-80 tracking-widest">
-                      Matching Score
-                    </p>
-                    <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-4">
-                      <CircularProgressbar
-                        value={selectedCandidate.score}
-                        text={`${selectedCandidate.score}%`}
-                        styles={buildStyles({
-                          pathColor: 'white',
-                          textColor: 'white',
-                          trailColor: 'rgba(255,255,255,0.2)',
-                          textSize: '26px'
-                        })}
-                      />
-                    </div>
-                    <div
-                      className={`text-[10px] font-bold px-4 py-1.5 rounded-full inline-block bg-white/20 backdrop-blur-md border border-white/30`}>
-                      {selectedCandidate.analysis.suitability_tag}
                     </div>
                   </div>
                 </div>
