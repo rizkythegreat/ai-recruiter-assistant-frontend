@@ -1,11 +1,8 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000',
-  timeout: 120000, // 2 minutes — LlamaParse can be slow
-  headers: {
-    Accept: 'application/json'
-  }
+  baseURL: '/api/proxy',
+  timeout: 120000 // 2 minutes — LlamaParse can be slow
 });
 
 // Request interceptor — attach any future auth token here

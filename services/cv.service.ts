@@ -1,16 +1,12 @@
-import apiClient from "@/lib/api-client";
-import type {
-  ListCVResponse,
-  UploadCVResponse,
-  DeleteCVResponse,
-} from "@/types/api";
+import apiClient from '@/lib/api-client';
+import type { ListCVResponse, UploadCVResponse, DeleteCVResponse } from '@/types/api';
 
 /**
  * GET /api/v1/list-cv
  * Fetch all CVs stored in MongoDB Atlas.
  */
 export async function listCVs(userId: string): Promise<ListCVResponse> {
-  const { data } = await apiClient.get<ListCVResponse>(`/api/v1/list-cv?user_id=${userId}`);
+  const { data } = await apiClient.get<ListCVResponse>(`/list-cv?user_id=${userId}`);
   return data;
 }
 
@@ -27,21 +23,17 @@ export async function uploadCVs(
   onProgress?: (percent: number) => void
 ): Promise<UploadCVResponse> {
   const formData = new FormData();
-  files.forEach((file) => formData.append("files", file));
-  formData.append("user_id", userId);
+  files.forEach((file) => formData.append('files', file));
+  formData.append('user_id', userId);
 
-  const { data } = await apiClient.post<UploadCVResponse>(
-    "/api/v1/upload-cv",
-    formData,
-    {
-      headers: { "Content-Type": "multipart/form-data" },
-      onUploadProgress: (event: any) => {
-        if (onProgress && event.total) {
-          onProgress(Math.round((event.loaded * 100) / event.total));
-        }
-      },
-    } as any
-  );
+  const { data } = await apiClient.post<UploadCVResponse>('/upload-cv', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    onUploadProgress: (event: any) => {
+      if (onProgress && event.total) {
+        onProgress(Math.round((event.loaded * 100) / event.total));
+      }
+    }
+  } as any);
   return data;
 }
 
@@ -53,7 +45,7 @@ export async function uploadCVs(
  */
 export async function deleteCV(filename: string, userId: string): Promise<DeleteCVResponse> {
   const { data } = await apiClient.delete<DeleteCVResponse>(
-    `/api/v1/delete-cv/${encodeURIComponent(filename)}?user_id=${userId}`
+    `/delete-cv/${encodeURIComponent(filename)}?user_id=${userId}`
   );
   return data;
 }
